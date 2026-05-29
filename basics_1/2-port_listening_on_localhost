@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Listen for incoming TCP connections on port 98 bound to localhost.
+
+exec nc -4 -lk localhost 98

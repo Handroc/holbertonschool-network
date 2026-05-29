@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Reconfigure /etc/hosts so localhost and facebook.com resolve to fixed IPv4 addresses.
+
+tmp_file=$(mktemp)
+
+awk '
+    /^[[:space:]]*#/ { print; next }
+    {
+        has_localhost = 0
+        has_facebook = 0
+        for (i = 2; i <= NF; i++) {
+            if ($i == "localhost") {
+                has_localhost = 1
+            }
+            if ($i == "facebook.com") {
+                has_facebook = 1
+            }
+        }
+        if (!has_localhost && !has_facebook) {
+            print
+        }
+    }
+' /etc/hosts > "$tmp_file"
+
+{
+    printf '%s\n' '127.0.0.2 localhost'
+    printf '%s\n' '8.8.8.8 facebook.com'
+} >> "$tmp_file"
+
+cat "$tmp_file" > /etc/hosts
+rm -f "$tmp_file"
