@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Display listening TCP and UDP ports with the owning process when possible.
+if command -v netstat >/dev/null 2>&1; then
+    netstat -plunt
+else
+    ss -plunt
+fi
